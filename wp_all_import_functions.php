@@ -1,6 +1,6 @@
 <?php
 
-add_action('pmxi_saved_post','post_saved',10,2);
+add_action('pmxi_saved_post','post_saved',5,2);
 function post_saved( $postid, $xml_node) {
     $attachments = get_attached_media( '', $postid );
     $content_post = get_post( $postid );
