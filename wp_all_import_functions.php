@@ -1,3 +1,5 @@
+<?php
+
 add_action('pmxi_saved_post','post_saved',10,2);
 function post_saved( $postid, $xml_node) {
     $attachments = get_attached_media( '', $postid );
