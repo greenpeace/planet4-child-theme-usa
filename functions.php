@@ -12,4 +12,4 @@ function enqueue_child_styles() {
 	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', [], $css_creation );
 }
 
-require_once("wp_all_import_functions.php");
+require_once 'wp_all_import_functions.php';
