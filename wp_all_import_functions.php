@@ -24,6 +24,11 @@ function post_saved( $postid, $xml_node) {
     // Fix featured image, subtitle and descriptive paragraph.
     $record = json_decode( json_encode( ( array ) $xml_node ), 1 );
 
+    if (!empty($record['PostType']) && $record['PostType'] === "report" & !empty($record['desktop_hero']) && !empty($record['ImageID']) && !empty($record['ImageURL'])) {
+        // For report post type use desktop here image as a feature image.
+        $record['image_video'] = $record['desktop_hero'];
+    }
+	
     // Featured/Hero image
     if (!empty($record['image_video']) && !empty($record['ImageID']) && !empty($record['ImageURL'])) {
         $featured_image = '';
@@ -65,6 +70,41 @@ function post_saved( $postid, $xml_node) {
     // Subtitle
     if (!empty($record['subtitle'])) {
         $content = "<span class='p4subtitle'>" . $record['subtitle'] . "</span><br />" . $content;
+    }
+
+	if (!empty($record['PostType']) && $record['PostType'] === "report") {
+        $content = "</div>" . $content;
+
+        // Report download link
+        if (!empty($record['download_link'])) {
+            $download_link = $record['download_link'];
+            $basename = basename( $record['download_link'] );
+            $basename = str_replace(' ', '-', $basename);
+            $basename = str_replace('%20', '-', $basename);
+            foreach ( $attachments as $attachment ) {
+                if ( preg_match( '/'.$basename.'$/i', $attachment->guid ) ) {
+                    $download_link = $attachment->guid;
+                }
+            }
+
+
+            $content = "<p class='downloadLink'><span>Download: </span> <a target='_blank' href='" .$download_link. "'>PDF <i class='fa fa-arrow-circle-down' aria-hidden='true'></i></a></p>" . $content;
+            //<p class="downloadLink"><span>Download: </span> <a target="_blank" href="https://www.greenpeace.org/usa/wp-content/uploads/2024/06/Bankrolling-Bitcoin-Report-2024.pdf">PDF <i class="fa fa-arrow-circle-down" aria-hidden="true"></i></a></p>
+        }
+
+        // Report Edition
+        if (!empty($record['edition'])) {
+            $content = "<p class='version'><span>Edition: </span>" . $record['edition'] . "</p>" . $content;
+            //<p class="version"><span>Edition: </span>1</p>
+        }
+
+        // Report publish date
+        if (!empty($record['publish_date'])) {
+            $content = "<p class='publishDate'><span>Published: </span>" . $record['publish_date'] . "</p>" . $content;
+            //<p class="publishDate"><span>Published: </span>06-14-2024</p>
+        }
+
+        $content = "<div class='report-info'>" . $content;
     }
 
     $updated_post = array();
