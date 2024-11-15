@@ -11,3 +11,62 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Tags: light, accessibility-ready
 Text Domain: planet4-child-theme-usa
 */
+
+/* Override styles from EveryAction Form Embeds */
+.at p {
+  color: var(--color-text-body) !important;
+  font-family: var(--body--font-family) !important;
+}
+
+.at a {
+  color: inherit !important;
+}
+
+.at-title {
+  font-family: var(--font-family-heading) !important;
+  font-weight: inherit !important;
+}
+
+.at form .label-amount > a,
+.at form .label-amount input:required {
+  background-color: var(--gp-green-500) !important;
+}
+
+.at form .label-amount input:required {
+  border-color: var(--gp-green-600) !important;
+}
+
+.at .error,
+.at .error input:required::placeholder {
+  color: var(--color-text--error) !important;
+}
+
+.at .error input:required {
+  border-color: var(--color-text--error) !important;
+}
+
+.at .at-step.active.invalid > ::before {
+  background-color: var(--color-text--error) !important;
+  border-color: var(--color-text--error) !important;
+}
+
+.at .error input:required:focus {
+  box-shadow: 0 0 5px var(--red-100) !important;
+}
+
+.at-form-submit .btn-at,
+.at-form-submit .btn-at:focus,
+.at .btn-at-primary:active {
+  color: var(--color-text-button--primary) !important;
+}
+
+.at-form-submit .btn-at:focus,
+.at .btn-at-primary:active {
+  box-shadow: 0 0 4px 0 var(--grey-900) !important;
+}
+
+.btn-at.submitStep,
+.btn-at.nextStep {
+  background-color: var(--color-background-button--cta) !important;
+  color: var(--color-text-button--cta) !important;
+}
