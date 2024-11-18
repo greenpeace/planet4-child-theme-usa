@@ -20,8 +20,5 @@
 				"type:wordpress-plugin"
 			]
 		}
-	},
-  "require": {
-		"greenpeace/planet4-child-theme-usa": "dev-PLANET-7663_override-styles-every-action-form-embeds"
-	},
+	}
 }
