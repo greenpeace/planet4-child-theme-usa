@@ -54,6 +54,11 @@ Text Domain: planet4-child-theme-usa
   box-shadow: 0 0 5px var(--red-100) !important;
 }
 
+.at .at-row > label {
+  font-size: 1rem !important;
+  font-weight: var(--font-weight-semibold) !important;
+}
+
 .at-form-submit .btn-at,
 .at-form-submit .btn-at:focus,
 .at .btn-at-primary:active {
@@ -65,8 +70,50 @@ Text Domain: planet4-child-theme-usa
   box-shadow: 0 0 4px 0 var(--grey-900) !important;
 }
 
-.btn-at.submitStep,
-.btn-at.nextStep {
+.at .btn-at.submitStep,
+.at .btn-at.nextStep {
   background-color: var(--color-background-button--cta) !important;
   color: var(--color-text-button--cta) !important;
+  font-family: var(--font-family-button) !important;
+}
+
+[id^=NVTag]:has(+ footer):has(> [id^=NVSignupForm]) {
+  max-width: 100vw !important;
+  background: linear-gradient(rgba(255,255,255,.85), rgba(255,255,255,.85)), url("https://media.greenpeace.org/Assets/V2/ChFHUDBTNTAwMDAwMDAwMDAwMhIPVFIxX1dBVEVSTUFSS0VEGiZcVFIxX1dBVEVSTUFSS0VEXGNcMFxiXDNcR1AwU1RSM0lRLmpwZyIECAEQD0ABYglHUDBTVFIzSVE-~/27MZIFJX70XJ9/QGVCFR4xXK@Idq8I/GP0STR3IQ.jpg") !important;
+}
+
+.at:has(div[id^=NVSignupForm]) .btn-at.at-submit {
+  background-color: var(--p4-dark-green-800) !important;
+  color: var(--white) !important;
+  font-family: var(--font-family-button) !important;
+}
+
+.at div[id^=NVSignupForm] .at-inner {
+  background-color: transparent !important;
+  max-width: 910px;
+  margin: auto;
+}
+
+.at .SmsLegalDisclaimer p {
+  font-size: 1.1rem;
+  line-height: 150%;
+}
+
+.at .thankYou {
+  padding: 24px;
+  text-align: center;
+}
+
+.at .thankYou p {
+  margin: 0 !important;
+}
+
+
+/**
+  This media query is set by the at library
+*/
+@media (max-width: calc(480px)) {
+  .at .at-row {
+    margin-bottom: 1rem !important;
+  }
 }
