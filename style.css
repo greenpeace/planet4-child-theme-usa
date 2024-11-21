@@ -12,6 +12,11 @@ Tags: light, accessibility-ready
 Text Domain: planet4-child-theme-usa
 */
 
+/* We need to re-assign this property since it's being overridden by at */
+.footer-menu .list-unstyled {
+  line-height: var(--line-height-m--font-family-tertiary);
+}
+
 /* Override styles from EveryAction Form Embeds */
 .at p {
   color: var(--color-text-body) !important;
@@ -107,7 +112,6 @@ Text Domain: planet4-child-theme-usa
 .at .thankYou p {
   margin: 0 !important;
 }
-
 
 /**
   This media query is set by the at library
