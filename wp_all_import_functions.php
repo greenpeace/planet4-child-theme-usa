@@ -1,6 +1,79 @@
 <?php
 
-add_action('pmxi_saved_post','post_saved',5,2);
+add_action('rest_api_init', function () {
+    register_rest_route('update_broken_links/v1', '/data/', array(
+        'methods' => 'POST',
+        'callback' => 'update_broken_links_callback',
+    ));
+});
+
+function update_broken_links_callback(WP_REST_Request $request) {
+    $data = $request->get_json_params();
+
+    if (isset($data['pid']) && isset($data['spid']) && $data['mime_type']) {
+        $pids = $data['pid'];
+        $spid = $data['spid'];
+        $mime_type = $data['mime_type'];
+
+        $logs = [];
+        foreach($pids as $pid) {
+             $info = update_post_links( $pid, $spid[0], $mime_type);
+             $logs[] = implode(' ', $info);
+        }
+
+        return new WP_REST_Response(array('status' => 'success', 'logs' => $logs, 'data' => $data), 200);
+    } else {
+        return new WP_REST_Response(array('status' => 'error', 'message' => 'Missing params'), 500);
+    }
+}
+
+
+function update_post_links( $postid, $spostid, $mime_type= 'pdf'):array {
+    $content_post = get_post( $postid );
+    $content = $content_post->post_content;
+    $content = apply_filters( 'the_content', $content );
+
+    if ($mime_type === 'pdf') {
+        $attachments = get_attached_media( 'application/pdf', $spostid );
+        preg_match_all( '@href="([^"]+\.pdf|PDF)"@' , $content, $match_pdf );
+        $media_files = array_pop( $match_pdf );
+    }
+
+    if ($mime_type === 'img') {
+        $attachments = get_attached_media( 'image', $spostid );
+        preg_match_all( '@src="([^"]+)"@' , $content, $match_img );
+        $media_files = array_pop( $match_img );
+    }
+
+    // Fix broken url in Post content.
+    foreach ( $media_files as $media_file ) {
+        if (strpos($media_file,'planet4-usa-stateless')) {
+            continue;
+        }
+
+        $basename = basename( $media_file );
+        $basename = str_replace(' ', '-', $basename);
+        $basename = str_replace('%20', '-', $basename);
+        foreach ( $attachments as $attachment ) {
+            if ( preg_match( '/'.$basename.'$/i', $attachment->guid ) ) {
+                $content = str_replace( $media_file, $attachment->guid, $content );
+            }
+        }
+    }
+
+    $updated_post = [];
+    $updated_post["ID"] = $postid;
+    $updated_post["post_content"] = $content;
+    $update_status = wp_update_post( $updated_post );
+
+    return [
+        'postid' => $postid ,
+        'spostid' => $spostid,
+        'update_status' => $update_status,
+    ];
+}
+
+//add_action('pmxi_saved_post','post_saved',5,2);
 function post_saved( $postid, $xml_node) {
     $attachments = get_attached_media( '', $postid );
     $content_post = get_post( $postid );
