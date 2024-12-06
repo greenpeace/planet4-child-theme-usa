@@ -21,9 +21,9 @@ function update_broken_links_callback(WP_REST_Request $request) {
              $logs[] = implode(' ', $info);
         }
 
-        return new WP_REST_Response(array('status' => 'success', 'logs' => $logs, 'data' => $data), 200);
+        return new WP_REST_Response(['status' => 'success', 'logs' => $logs, 'data' => $data], 200);
     } else {
-        return new WP_REST_Response(array('status' => 'error', 'message' => 'Missing params'), 500);
+        return new WP_REST_Response(['status' => 'error', 'message' => 'Missing params'], 500);
     }
 }
 
@@ -45,8 +45,11 @@ function update_post_links( $postid, $spostid, $mime_type= 'pdf'):array {
         $media_files = array_pop( $match_img );
     }
 
+    $update_status = 0;
+
     // Fix broken url in Post content.
     foreach ( $media_files as $media_file ) {
+        // If media file belongs to P4 stateless bucket, skip it.
         if (strpos($media_file,'planet4-usa-stateless')) {
             continue;
         }
@@ -55,20 +58,31 @@ function update_post_links( $postid, $spostid, $mime_type= 'pdf'):array {
         $basename = str_replace(' ', '-', $basename);
         $basename = str_replace('%20', '-', $basename);
         foreach ( $attachments as $attachment ) {
-            if ( preg_match( '/'.$basename.'$/i', $attachment->guid ) ) {
-                $content = str_replace( $media_file, $attachment->guid, $content );
+            $guid = $attachment->guid;
+            // If same image/pdf imported twice, the stateless append -1 in file name.
+            if (preg_match( '/\-1\.jpg$/i', $guid )) {
+                $guid = str_replace( '-1.jpg', '.jpg', $guid );
+            }
+            if (preg_match( '/\-1\.pdf$/i', $guid )) {
+                $guid = str_replace( '-1.pdf', '.pdf', $guid );
+            }
+
+            if ( preg_match( '/'.$basename.'$/i', $guid ) ) {
+                $content = str_replace( $media_file, $guid, $content );
+                $update_status = 1;
             }
         }
     }
 
-    $updated_post = [];
-    $updated_post["ID"] = $postid;
-    $updated_post["post_content"] = $content;
-    $update_status = wp_update_post( $updated_post );
+    if ($update_status === 1) {
+        $updated_post = [];
+        $updated_post["ID"] = $postid;
+        $updated_post["post_content"] = $content;
+        wp_update_post( $updated_post );
+    }
 
     return [
         'postid' => $postid ,
-        'spostid' => $spostid,
         'update_status' => $update_status,
     ];
 }
