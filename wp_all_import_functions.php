@@ -37,12 +37,22 @@ function update_post_links( $postid, $spostid, $mime_type= 'pdf'):array {
         $attachments = get_attached_media( 'application/pdf', $spostid );
         preg_match_all( '@href="([^"]+\.pdf|PDF)"@' , $content, $match_pdf );
         $media_files = array_pop( $match_pdf );
+
+        // check for single quote pdf files.
+        preg_match_all( "@href='([^']+\.pdf|PDF)'@" , $content, $single_quote_match_pdf );
+        $single_quote_media = array_pop( $single_quote_match_pdf );
+        $media_files = array_merge($media_files, $single_quote_media);
     }
 
     if ($mime_type === 'img') {
         $attachments = get_attached_media( 'image', $spostid );
+        //print_r($attachments);
         preg_match_all( '@src="([^"]+)"@' , $content, $match_img );
         $media_files = array_pop( $match_img );
+        // check for single quote images
+        preg_match_all( "@src='([^']+)'@" , $content, $single_quote_match_img );
+        $single_quote_media = array_pop( $single_quote_match_img );
+        $media_files = array_merge($media_files, $single_quote_media);
     }
 
     $update_status = 0;
@@ -50,7 +60,7 @@ function update_post_links( $postid, $spostid, $mime_type= 'pdf'):array {
     // Fix broken url in Post content.
     foreach ( $media_files as $media_file ) {
         // If media file belongs to P4 stateless bucket, skip it.
-        if (strpos($media_file,'planet4-usa-stateless')) {
+        if (strpos($media_file,"planet4-usa-stateless")) {
             continue;
         }
 
@@ -59,6 +69,7 @@ function update_post_links( $postid, $spostid, $mime_type= 'pdf'):array {
         $basename = str_replace('%20', '-', $basename);
         foreach ( $attachments as $attachment ) {
             $guid = $attachment->guid;
+
             // If same image/pdf imported twice, the stateless append -1 in file name.
             if (preg_match( '/\-1\.jpg$/i', $guid )) {
                 $guid = str_replace( '-1.jpg', '.jpg', $guid );
