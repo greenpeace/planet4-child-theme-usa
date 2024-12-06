@@ -46,7 +46,6 @@ function update_post_links( $postid, $spostid, $mime_type= 'pdf'):array {
 
     if ($mime_type === 'img') {
         $attachments = get_attached_media( 'image', $spostid );
-        //print_r($attachments);
         preg_match_all( '@src="([^"]+)"@' , $content, $match_img );
         $media_files = array_pop( $match_img );
         // check for single quote images
@@ -70,13 +69,13 @@ function update_post_links( $postid, $spostid, $mime_type= 'pdf'):array {
         foreach ( $attachments as $attachment ) {
             $guid = $attachment->guid;
 
-            // If same image/pdf imported twice, the stateless append -1 in file name.
+            /*// If same image/pdf imported twice, the stateless append -1 in file name.
             if (preg_match( '/\-1\.jpg$/i', $guid )) {
                 $guid = str_replace( '-1.jpg', '.jpg', $guid );
             }
             if (preg_match( '/\-1\.pdf$/i', $guid )) {
                 $guid = str_replace( '-1.pdf', '.pdf', $guid );
-            }
+            }*/
 
             if ( preg_match( '/'.$basename.'$/i', $guid ) ) {
                 $content = str_replace( $media_file, $guid, $content );
