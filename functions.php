@@ -23,3 +23,9 @@ function enqueue_every_action_form_scripts() {
 }
 
 require_once 'wp_all_import_functions.php';
+
+/**
+ * Suppress Yoast SEO author metadata that are not aware of Author override.
+ */
+add_filter('wpseo_meta_author', '__return_false');
+add_filter('wpseo_opengraph_author_facebook', '__return_false');
