@@ -84,7 +84,7 @@ Text Domain: planet4-child-theme-usa
 
 [id^=NVTag]:has(+ footer):has(> [id^=NVSignupForm]) {
   max-width: 100vw !important;
-  background: linear-gradient(rgba(255,255,255,.85), rgba(255,255,255,.85)), url("https://media.greenpeace.org/Assets/V2/ChFHUDBTNTAwMDAwMDAwMDAwMhIPVFIxX1dBVEVSTUFSS0VEGiZcVFIxX1dBVEVSTUFSS0VEXGNcMFxiXDNcR1AwU1RSM0lRLmpwZyIECAEQD0ABYglHUDBTVFIzSVE-~/27MZIFJX70XJ9/QGVCFR4xXK@Idq8I/GP0STR3IQ.jpg") !important;
+  background: linear-gradient(rgba(255,255,255,.85), rgba(255,255,255,.85)), url("https://www.greenpeace.org/static/planet4-usa-stateless/2024/11/49e85fc0-gp0str3iq.jpg") !important;
 }
 
 .at:has(div[id^=NVSignupForm]) .btn-at.at-submit {
